@@ -1,5 +1,4 @@
 #include <pulse/simple.h>
-#include "pulsetracker.h"
 
 using namespace std;
 
@@ -20,14 +19,16 @@ class Pulser {
     PULSEAUDIO_SAMPLE_TYPE *_history;
     int _ringIdx;
     PULSEAUDIO_SAMPLE_TYPE _peakness;
-    PulseTracker *_tracker;
 
     string getRunningSink();
 
   public:
 
-    Pulser(PulseTracker * tracker);
+    Pulser();
     ~Pulser();
     void pulse();
+
+    bool isPeak;
+    bool isIncreasing;
 
 };

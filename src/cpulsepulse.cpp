@@ -12,7 +12,7 @@ const uint8_t NUM_CHANNELS = 2;
 const uint32_t SAMPLE_RATE = 44100;
 const int HISTORY_LENGTH = 32;
 
-Pulser::Pulser(PulseTracker * tracker) {
+Pulser::Pulser() {
 
     // find the running pulseaudio sink
     string runningSink = getRunningSink();
@@ -34,7 +34,8 @@ Pulser::Pulser(PulseTracker * tracker) {
     }
 
     // set up peak tracking
-    _tracker = tracker;
+    isPeak = false;
+    isIncreasing = false;
     _history = new PULSEAUDIO_SAMPLE_TYPE[HISTORY_LENGTH];
     _ringIdx = 0;
     _peakness = 0;
@@ -91,8 +92,8 @@ void Pulser::pulse() {
     _peakness = latest - valueToBeat;
 
     // save values for the derived state variables
-    _tracker->isPeak = _peakness > 0;
-    _tracker->isIncreasing = _peakness - lastPeakness > 312.0;
+    isPeak = _peakness > 0;
+    isIncreasing = _peakness - lastPeakness > 312.0;
 
     // push the latest value into the ring buffer
     // and cycle the ring pointer if necessary
